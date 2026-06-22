@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:river_pod/pages/home_page.dart';
+import 'package:river_pod/services/http_service.dart';
 
-void main() {
+void main() async {
+  await _setupServices();
   runApp(const MyApp());
+}
+
+Future<void> _setupServices() async {
+  // Initialize any services here if needed
+  GetIt.instance.registerSingleton<HTTPService>(HTTPService());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,15 +21,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PokeDex',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        useMaterial3: true,
-        textTheme: GoogleFonts.quattrocentoSansTextTheme(),
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'PokeDex',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          useMaterial3: true,
+          textTheme: GoogleFonts.quattrocentoSansTextTheme(),
+        ),
+        home: const HomePage(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const HomePage(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

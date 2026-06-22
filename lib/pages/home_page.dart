@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:river_pod/controllers/home_page_controllers.dart';
+import 'package:river_pod/models/page_data.dart';
 
-class HomePage extends StatefulWidget {
+final homePageControllerProvider = StateNotifierProvider<HomePageController, HomePageData>((ref) {
+  return HomePageController(HomePageData.initial());
+});
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
+  late HomePageController _homePageController;
+  late HomePageData _homePageData;
+
   @override
   Widget build(BuildContext context) {
+    _homePageController = ref.watch(homePageControllerProvider.notifier);
+    _homePageData = ref.watch(homePageControllerProvider);
+
     return Scaffold(
       // appBar: AppBar(title: const Text('Home Page')),
       body: _buildUI(context),
@@ -48,16 +62,17 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: MediaQuery.sizeOf(context).height * 0.6,
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: 5,
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text('Pokemon $index'),
                   subtitle: Text('Pokemon $index'),
                   trailing: Icon(Icons.favorite_border),
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png',
-                    ),
+                    // backgroundImage: NetworkImage(
+                    //   'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$index.png',
+                    // ),
+                    backgroundColor: Colors.lightBlue,
                   ),
                 );
               },
